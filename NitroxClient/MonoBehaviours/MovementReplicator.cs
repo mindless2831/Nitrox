@@ -187,6 +187,7 @@ public abstract class MovementReplicator : MonoBehaviour
         float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
 
         transform.position = Vector3.Lerp(prevData.Position.ToUnity(), nextData.Position.ToUnity(), t);
+
         transform.rotation = Quaternion.Lerp(prevData.Rotation.ToUnity(), nextData.Rotation.ToUnity(), t);
 
         ApplyNewMovementData(nextData);

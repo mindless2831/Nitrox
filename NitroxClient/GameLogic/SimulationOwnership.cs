@@ -149,9 +149,7 @@ namespace NitroxClient.GameLogic
             {
                 return false;
             }
-
             MovementReplicator movementReplicator = gameObject.GetComponent<MovementReplicator>();
-
             if (isLocalPlayerNewOwner)
             {
                 if (movementReplicator)
