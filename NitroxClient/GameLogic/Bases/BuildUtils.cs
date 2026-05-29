@@ -237,7 +237,7 @@ public static class BuildUtils
     public static MapRoomEntity CreateMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId, EntityMetadataManager entityMetadataManager)
     {
         Int3 mapRoomCell = @base.NormalizeCell(@base.WorldToGrid(mapRoomFunctionality.transform.position));
-        MapRoomEntity mapRoomEntity = new(id, parentId, mapRoomCell.ToDto());
+        MapRoomEntity mapRoomEntity = new(id, parentId, mapRoomCell.ToDto(), GetMapRoomCameraDockingStates(mapRoomFunctionality), GetMapRoomCameraDockingIds(mapRoomFunctionality));
 
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(mapRoomFunctionality.gameObject);
 
@@ -262,6 +262,30 @@ public static class BuildUtils
         }
 
         return mapRoomEntity;
+    }
+
+    private static List<bool> GetMapRoomCameraDockingStates(MapRoomFunctionality mapRoomFunctionality)
+    {
+        return mapRoomFunctionality.GetComponentsInChildren<MapRoomCameraDocking>(true)
+                                   .OrderBy(docking => docking.gameObject.GetFullHierarchyPath())
+                                   .Select(docking => docking.cameraDocked)
+                                   .ToList();
+    }
+
+    private static List<NitroxId> GetMapRoomCameraDockingIds(MapRoomFunctionality mapRoomFunctionality)
+    {
+        return mapRoomFunctionality.GetComponentsInChildren<MapRoomCameraDocking>(true)
+                                   .OrderBy(docking => docking.gameObject.GetFullHierarchyPath())
+                                   .Select(docking =>
+                                   {
+                                       if (docking.camera && docking.camera.TryGetNitroxId(out NitroxId cameraId))
+                                       {
+                                           return cameraId;
+                                       }
+
+                                       return null;
+                                   })
+                                   .ToList();
     }
 
     private static MapRoomFunctionality FindUnregisteredMapRoomFunctionality(Base targetBase)

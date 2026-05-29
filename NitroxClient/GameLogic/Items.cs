@@ -118,6 +118,12 @@ public class Items
         WorldEntity droppedItem;
         List<Entity> childrenEntities = GetPrefabChildren(gameObject, id, entityMetadataManager).ToList();
 
+        BatteryChildEntityHelper.TryPopulateInstalledBattery(
+            gameObject,
+            childrenEntities,
+            id,
+            allowDefaultBattery: false);
+
         // If the item is dropped in a WaterPark we need to handle it differently
         NitroxId parentId = null;
         if (IsGlobalRootObject(gameObject) || (gameObject.GetComponent<Pickupable>() && TryGetParentWaterParkId(gameObject.transform.parent, out parentId)))
