@@ -206,6 +206,10 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public static MovementReplicator AddReplicatorToObject(GameObject gameObject)
     {
+        if (gameObject.GetComponent<MapRoomCamera>())
+        {
+            return gameObject.AddComponent<MapRoomCameraMovementReplicator>();
+        }
         if (gameObject.GetComponent<SeaMoth>())
         {
             return gameObject.AddComponent<SeamothMovementReplicator>();
